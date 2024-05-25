@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Online Medical System</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: linear-gradient(to right, #f6f6f6, #e8e8e8);
+    }
+
+    .container2 {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .form {
+      padding: 2rem;
+    }
+
+    .form header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333333;
+    }
+
+    .form input[type="text"],
+    .form input[type="password"] {
+      background-color: #f2f2f2;
+      border: none;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form .button {
+      background-color: #4a90e2;
+      color: #ffffff;
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .form .button:hover {
+      background-color: #3b7bc4;
+    }
+
+    .form a {
+      color: #4a90e2;
+    }
+
+    .form a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <div class="container2">
+    <input type="checkbox" id="check" class="hidden">
+    <div class="login form bg-white rounded shadow-md">
+      <header class="text-2xl font-bold mb-4">Login</header>
+      <form onsubmit="login(event)">
+        <input type="text" id="loginEmail" placeholder="Enter your email" class="w-full p-2 mb-3 border rounded" required>
+        <input type="password" id="loginPassword" placeholder="Enter your password" class="w-full p-2 mb-3 border rounded" required>
+        <a href="#" class="text-blue-500 hover:underline mb-3 inline-block">Forgot password?</a>
+        <input type="submit" class="button bg-blue-500 text-white w-full p-2 rounded cursor-pointer" value="Login">
+      </form>
+      <div class="signup mt-4">
+        <span class="text-gray-700">Don't have an account? <label for="check" class="text-blue-500 hover:underline cursor-pointer">Signup</label></span>
+      </div>
+      <div class="back-to-home mt-4">
+        <a href="index.html" class="text-blue-500 hover:underline">Back to Home</a>
+      </div>
+    </div>
+    <div class="registration form bg-white rounded shadow-md hidden">
+      <header class="text-2xl font-bold mb-4">Signup</header>
+      <form onsubmit="signup(event)">
+        <input type="text" id="signupEmail" placeholder="Enter your email" class="w-full p-2 mb-3 border rounded" required>
+        <input type="password" id="signupPassword" placeholder="Create a password" class="w-full p-2 mb-3 border rounded" required>
+        <input type="password" id="confirmPassword" placeholder="Confirm your password" class="w-full p-2 mb-3 border rounded" required>
+        <input type="submit" class="button bg-blue-500 text-white w-full p-2 rounded cursor-pointer" value="Signup">
+      </form>
+      <div class="signup mt-4">
+        <span class="text-gray-700">Already have an account? <label for="check" class="text-blue-500 hover:underline cursor-pointer">Login</label></span>
+      </div>
+      <div class="back-to-home mt-4">
+        <a href="index.html" class="text-blue-500 hover:underline">Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('label[for="check"]').forEach(label => {
+      label.addEventListener('click', () => {
+        document.querySelector('.login.form').classList.toggle('hidden');
+        document.querySelector('.registration.form').classList.toggle('hidden');
+      });
+    });
+
+    function login(event) {
+      event.preventDefault();
+
+      const loginEmail = document.getElementById('loginEmail').value;
+      const loginPassword = document.getElementById('loginPassword').value;
+
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+
+      const user = users.find(user => user.email === loginEmail && user.password === loginPassword);
+
+      if (user) {
+        alert('Login successful!');
+        window.location.href = 'service.html'; // Redirect to index.html
+      } else {
+        alert('Invalid email or password');
+      }
+    }
+
+    function signup(event) {
+      event.preventDefault();
+
+      const signupEmail = document.getElementById('signupEmail').value;
+      const signupPassword = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (signupPassword !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+
+      const existingUser = users.find(user => user.email === signupEmail);
+
+      if (existingUser) {
+        alert('Email already exists');
+        return;
+      }
+
+      const newUser = {
+        email: signupEmail,
+        password: signupPassword
+      };
+
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('Registration successful!');
+      window.location.reload(); // Reload the page
+    }
+  </script>
+</body>
+</html>
